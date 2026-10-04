@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "DROVYR — Intelligence in Motion",
-    short_name: "DROVYR",
-    description: "Operational intelligence and AI automation for growing service businesses.",
+    name: "Drovyr — Intelligence in Motion",
+    short_name: "Drovyr",
+    description: "AI operations and automation for service businesses.",
     start_url: "/",
     display: "standalone",
     background_color: "#0A0F1A",

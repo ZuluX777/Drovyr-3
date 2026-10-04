@@ -7,13 +7,15 @@ import HowItWorksSection from "@/components/sections/HowItWorksSection";
 import IndustriesSection from "@/components/sections/IndustriesSection";
 import OpsAuditSection from "@/components/sections/OpsAuditSection";
 import FinalCTASection from "@/components/sections/FinalCTASection";
+import { createPageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "DROVYR — Operational Intelligence & AI Automation for Growing Businesses",
+export const metadata: Metadata = createPageMetadata({
+  title: "Drovyr — AI operations for service businesses",
   description:
-    "DROVYR helps growing service businesses see what's happening across their operation, automate repetitive work, and make better decisions. Get a free ops audit.",
-  alternates: { canonical: "/" },
-};
+    "Drovyr helps service businesses fix where work breaks down, then connect their tools and apply AI and automation. Book a free assessment.",
+  path: "/",
+  absoluteTitle: true,
+});
 
 export default function HomePage() {
   return (

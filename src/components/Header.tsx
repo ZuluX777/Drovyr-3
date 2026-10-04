@@ -27,16 +27,16 @@ export default function Header() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-focus-border/70 bg-focus/95 backdrop-blur-sm">
-      <div className="container-content flex h-16 items-center justify-between md:h-20">
-        <Link href="/" className="flex items-center gap-2" aria-label={`${siteConfig.name} home`}>
+    <header className="sticky top-0 z-50 border-b border-operational/20 bg-focus/95 backdrop-blur-sm">
+      <div className="container-content flex h-20 items-center justify-between">
+        <Link href="/" className="flex shrink-0 items-center">
           <Image
             src="/logo-wordmark.png"
-            alt="DROVYR"
-            width={960}
-            height={253}
+            alt="Drovyr home"
+            width={168}
+            height={44}
             priority
-            className="h-6 w-auto md:h-7"
+            className="h-auto w-[168px]"
           />
         </Link>
 
@@ -45,8 +45,8 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium transition-colors hover:text-clarity ${
-                pathname === link.href ? "text-elevation" : "text-elevation-muted"
+              className={`text-sm font-medium underline-offset-4 hover:text-elevation hover:underline hover:decoration-2 ${
+                pathname === link.href ? "text-elevation" : "text-operational"
               }`}
             >
               {link.label}
@@ -65,7 +65,7 @@ export default function Header() {
 
         <button
           type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-md text-elevation lg:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-md text-elevation lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           aria-controls="mobile-menu"
@@ -87,13 +87,13 @@ export default function Header() {
       </div>
 
       {open && (
-        <div id="mobile-menu" className="border-t border-focus-border/70 bg-focus lg:hidden">
+        <div id="mobile-menu" className="border-t border-operational/20 bg-focus lg:hidden">
           <nav className="container-content flex flex-col gap-1 py-4" aria-label="Mobile">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-md px-2 py-3 text-base font-medium text-elevation-muted hover:bg-focus-card hover:text-elevation"
+                className="rounded-md px-2 py-3 text-base font-medium text-operational hover:text-elevation"
               >
                 {link.label}
               </Link>

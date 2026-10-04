@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   companySizeOptions,
   industryOptions,
@@ -15,9 +15,12 @@ type Status = "idle" | "submitting" | "success" | "error";
 type FieldErrors = Partial<Record<keyof LeadFormValues, string>>;
 
 const inputClasses =
-  "w-full rounded-md border border-focus-border bg-focus px-4 py-3 text-elevation placeholder:text-elevation-faint focus:border-momentum focus:outline-none";
+  "w-full rounded-md border border-operational/20 bg-focus px-4 py-3 text-elevation placeholder:text-operational focus:border-momentum";
 
-const labelClasses = "block text-sm font-medium text-elevation-muted";
+const labelClasses = "block text-sm font-medium text-operational";
+
+const requestNotSent =
+  "Something went wrong and your request wasn't sent. Please try again shortly.";
 
 export default function LeadForm() {
   const [values, setValues] = useState<LeadFormValues>(leadFormDefaults as LeadFormValues);
@@ -26,6 +29,13 @@ export default function LeadForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const hasStartedRef = useRef(false);
   const submittingRef = useRef(false);
+  const errorRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (status === "error") {
+      errorRef.current?.focus();
+    }
+  }, [status]);
 
   function update<K extends keyof LeadFormValues>(key: K, value: LeadFormValues[K]) {
     if (!hasStartedRef.current) {
@@ -67,10 +77,7 @@ export default function LeadForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setServerError(
-          data?.message ||
-            "Something went wrong on our end. Please try again, or email office@drovyr.com directly."
-        );
+        setServerError(typeof data?.message === "string" ? data.message : requestNotSent);
         setStatus("error");
         submittingRef.current = false;
         return;
@@ -79,9 +86,7 @@ export default function LeadForm() {
       trackEvent("ops_audit_form_submit");
       setStatus("success");
     } catch {
-      setServerError(
-        "We couldn't reach the server. Check your connection and try again, or email office@drovyr.com directly."
-      );
+      setServerError(requestNotSent);
       setStatus("error");
       submittingRef.current = false;
     }
@@ -89,13 +94,10 @@ export default function LeadForm() {
 
   if (status === "success") {
     return (
-      <div
-        role="status"
-        className="rounded-xl border border-momentum/40 bg-focus-card p-10 text-center"
-      >
+      <div role="status" tabIndex={-1} className="rounded-xl border border-operational/20 p-10 text-center">
         <h2 className="font-display text-2xl font-semibold text-elevation">Request received</h2>
-        <p className="mt-3 text-elevation-muted">
-          Thanks — we&rsquo;ll be in touch shortly to schedule your Ops Audit conversation.
+        <p className="mt-3 text-operational">
+          Thanks, we got your request. We&rsquo;ll reply by email to set up a time.
         </p>
       </div>
     );
@@ -238,7 +240,7 @@ export default function LeadForm() {
 
       <div>
         <label htmlFor="companyWebsite" className={labelClasses}>
-          Company website <span className="text-elevation-faint">(optional)</span>
+          Company website <span className="text-operational">(optional)</span>
         </label>
         <input
           id="companyWebsite"
@@ -346,7 +348,7 @@ export default function LeadForm() {
 
       <div>
         <label htmlFor="currentTools" className={labelClasses}>
-          What systems/tools do you currently use? <span className="text-elevation-faint">(optional)</span>
+          What systems/tools do you currently use? <span className="text-operational">(optional)</span>
         </label>
         <textarea
           id="currentTools"
@@ -359,7 +361,7 @@ export default function LeadForm() {
       </div>
 
       <div>
-        <label className="flex items-start gap-3 text-sm text-elevation-muted">
+        <label className="flex items-start gap-3 text-sm text-operational">
           <input
             type="checkbox"
             required
@@ -370,9 +372,9 @@ export default function LeadForm() {
             aria-describedby={errors.consent ? "consent-error" : undefined}
           />
           <span>
-            I agree to be contacted by DROVYR about my Ops Audit request. See our{" "}
-            <a href="/privacy" className="text-clarity underline hover:text-elevation">
-              Privacy Policy
+            I agree to be contacted by Drovyr about my free AI &amp; ops assessment request. See our{" "}
+            <a href="/privacy" className="text-link">
+              Privacy policy
             </a>
             .
           </span>
@@ -385,7 +387,13 @@ export default function LeadForm() {
       </div>
 
       {serverError && (
-        <p id="form-server-error" role="alert" className="text-sm text-red-400">
+        <p
+          ref={errorRef}
+          id="form-server-error"
+          role="alert"
+          tabIndex={-1}
+          className="rounded-md border border-red-400 px-4 py-3 text-sm text-red-400"
+        >
           {serverError}
         </p>
       )}
@@ -393,9 +401,9 @@ export default function LeadForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="inline-flex w-full items-center justify-center rounded-md bg-momentum px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-momentum-dim disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+        className="inline-flex w-full items-center justify-center rounded-md bg-momentum px-6 py-3.5 text-sm font-semibold text-elevation transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
-        {status === "submitting" ? "Sending…" : "Request My Free Ops Audit"}
+        {status === "submitting" ? "Sending…" : "Send request"}
       </button>
     </form>
   );

@@ -7,18 +7,18 @@ import { reopenCookiePreferences } from "./CookieConsent";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-focus-border/70 bg-focus">
+    <footer className="border-t border-operational/20 bg-focus">
       <div className="container-content grid gap-10 py-14 md:grid-cols-4">
         <div className="md:col-span-2">
           <Image
             src="/logo-wordmark.png"
-            alt="DROVYR"
-            width={960}
-            height={253}
-            className="h-6 w-auto"
+            alt="Drovyr"
+            width={168}
+            height={44}
+            className="h-auto w-[168px]"
           />
-          <p className="mt-4 max-w-xs text-sm text-elevation-muted">{siteConfig.tagline}</p>
-          <p className="mt-1 text-sm text-elevation-faint">{siteConfig.location}</p>
+          <p className="mt-4 max-w-xs text-sm text-operational">{siteConfig.tagline}</p>
+          <p className="mt-1 text-sm text-operational">{siteConfig.location}</p>
         </div>
 
         <div>
@@ -26,13 +26,13 @@ export default function Footer() {
           <ul className="mt-4 space-y-3">
             {navLinks.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-sm text-elevation-muted hover:text-clarity">
+                <Link href={link.href} className="text-link text-sm">
                   {link.label}
                 </Link>
               </li>
             ))}
             <li>
-              <Link href="/contact" className="text-sm text-elevation-muted hover:text-clarity">
+              <Link href="/contact" className="text-link text-sm">
                 Contact
               </Link>
             </li>
@@ -44,27 +44,25 @@ export default function Footer() {
           <ul className="mt-4 space-y-3">
             {footerLegalLinks.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-sm text-elevation-muted hover:text-clarity">
+                <Link href={link.href} className="text-link text-sm">
                   {link.label}
                 </Link>
               </li>
             ))}
             <li>
-              <button
-                type="button"
-                onClick={() => reopenCookiePreferences()}
-                className="text-sm text-elevation-muted hover:text-clarity"
-              >
-                Cookie Preferences
+              <button type="button" onClick={() => reopenCookiePreferences()} className="text-link text-sm">
+                Cookie preferences
               </button>
             </li>
           </ul>
         </div>
       </div>
 
-      <div className="container-content flex flex-col gap-2 border-t border-focus-border/70 py-6 text-xs text-elevation-faint md:flex-row md:items-center md:justify-between">
-        <p>© {new Date().getFullYear()} DROVYR. All rights reserved.</p>
-        <p>{siteConfig.location} · Serving {siteConfig.serviceArea}</p>
+      <div className="container-content flex flex-col gap-2 border-t border-operational/20 py-6 text-xs text-operational md:flex-row md:items-center md:justify-between">
+        <p>© {new Date().getFullYear()} Drovyr. All rights reserved.</p>
+        <p>
+          {siteConfig.location} · Serving {siteConfig.serviceArea}
+        </p>
       </div>
     </footer>
   );
