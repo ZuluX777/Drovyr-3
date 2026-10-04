@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-manrope: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-inter: "Inter", Arial, sans-serif;
+  --font-manrope: "Manrope", Arial, sans-serif;
 }
 
 /* Self-hosted via @fontsource (see layout.tsx imports) — no runtime request
@@ -12,7 +12,7 @@
    dependency on fonts.googleapis.com being reachable. */
 
 * {
-  scrollbar-color: #1e2a45 #0a0f1a;
+  scrollbar-color: #8a94a6 #0a0f1a;
 }
 
 html {
@@ -44,11 +44,22 @@ body {
   color: #f8fafc;
 }
 
-/* Visible, on-brand keyboard focus ring everywhere */
+/* Visible keyboard focus. Momentum Blue passes the 3:1 focus-indicator requirement on navy. */
 :focus-visible {
-  outline: 2px solid #7dd3fc;
-  outline-offset: 3px;
+  outline: 2px solid #2563ff;
+  outline-offset: 2px;
   border-radius: 2px;
+}
+
+.text-link {
+  color: #f8fafc;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.text-link:hover {
+  text-decoration-thickness: 2px;
 }
 
 .container-content {

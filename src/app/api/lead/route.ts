@@ -50,17 +50,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: "Received." }, { status: 200 });
   } catch (err) {
     if (err instanceof EmailNotConfiguredError) {
-      // Surface a clear signal in server logs. Do not tell the visitor it
-      // succeeded — that would silently drop real leads once this goes live
-      // before RESEND_API_KEY is configured.
       console.error(
-        "[api/lead] Email not configured — lead was NOT delivered:",
-        JSON.stringify(lead)
+        "[api/lead] Email not configured — lead was NOT delivered. Missing:",
+        err.missing.join(", ")
       );
       return NextResponse.json(
         {
-          message:
-            "We're unable to submit requests right now. Please email office@drovyr.com directly, or call us.",
+          message: "Something went wrong and your request wasn't sent. Please try again shortly.",
         },
         { status: 503 }
       );
@@ -68,7 +64,7 @@ export async function POST(req: NextRequest) {
 
     console.error("[api/lead] Failed to send lead notification:", err);
     return NextResponse.json(
-      { message: "Something went wrong on our end. Please try again shortly." },
+      { message: "Something went wrong and your request wasn't sent. Please try again shortly." },
       { status: 500 }
     );
   }

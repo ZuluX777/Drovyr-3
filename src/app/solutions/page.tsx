@@ -1,21 +1,13 @@
 import type { Metadata } from "next";
 import CTAButton from "@/components/CTAButton";
-import { solutions } from "@/lib/site";
+import { capabilityAreas, createPageMetadata, siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Solutions — Operational Intelligence & AI Automation",
+export const metadata: Metadata = createPageMetadata({
+  title: "What we work on",
   description:
-    "Ops Intel, Process AI, LeadFlow, and Workflow Hub — how DROVYR connects your existing systems, automates repetitive work, and gives you visibility into your operation.",
-  alternates: { canonical: "/solutions" },
-};
-
-const voiceAssist = {
-  name: "Voice & Assist",
-  tagline: "AI teammates for communication and assistance.",
-  description:
-    "Where it fits your operation, AI can help handle routine communication and internal support — always positioned to make your team more capable, not to replace them.",
-  note: "This area is earlier in development than our other solutions. We'll only recommend it where it's genuinely ready for your use case.",
-};
+    "Lead intake and follow-up, scheduling, admin work and connected systems, and visibility for service businesses.",
+  path: "/solutions",
+});
 
 export default function SolutionsPage() {
   return (
@@ -23,64 +15,37 @@ export default function SolutionsPage() {
       <div className="container-content">
         <div className="max-w-2xl">
           <h1 className="font-display text-4xl font-semibold text-elevation md:text-5xl">
-            Solutions
+            What we work on
           </h1>
-          <p className="mt-5 text-lg text-elevation-muted">
-            Four capability areas, connected to the systems you already run. We recommend what
-            fits your operation — not the whole list.
+          <p className="mt-5 text-lg text-operational">
+            Four areas where service businesses lose time. We recommend what fits your operation,
+            not the whole list. These are examples of work we look at, not fixed packages.
           </p>
         </div>
 
         <div className="mt-16 space-y-16">
-          {solutions.map((solution) => (
+          {capabilityAreas.map((area) => (
             <div
-              key={solution.slug}
-              id={solution.slug}
-              className="grid gap-8 border-t border-focus-border pt-10 lg:grid-cols-[280px_1fr] lg:gap-16"
+              key={area.slug}
+              id={area.slug}
+              className="grid gap-8 border-t border-operational/20 pt-10 lg:grid-cols-[280px_1fr] lg:gap-16"
             >
-              <div>
-                <h2 className="font-display text-2xl font-semibold text-elevation">{solution.name}</h2>
-                <p className="mt-2 text-clarity">{solution.tagline}</p>
-              </div>
-              <div>
-                <p className="max-w-2xl text-elevation-muted">{solution.description}</p>
-                <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-                  {solution.capabilities.map((capability) => (
-                    <li key={capability} className="flex gap-3 text-sm text-elevation-muted">
-                      <span
-                        aria-hidden="true"
-                        className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-momentum"
-                      />
-                      <span>{capability}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <h2 className="font-display text-2xl font-semibold text-elevation">{area.name}</h2>
+              <p className="max-w-2xl text-operational">{area.description}</p>
             </div>
           ))}
-
-          <div className="grid gap-8 border-t border-focus-border pt-10 lg:grid-cols-[280px_1fr] lg:gap-16">
-            <div>
-              <h2 className="font-display text-2xl font-semibold text-elevation">{voiceAssist.name}</h2>
-              <p className="mt-2 text-clarity">{voiceAssist.tagline}</p>
-            </div>
-            <div>
-              <p className="max-w-2xl text-elevation-muted">{voiceAssist.description}</p>
-              <p className="mt-4 max-w-2xl text-sm text-elevation-faint">{voiceAssist.note}</p>
-            </div>
-          </div>
         </div>
 
-        <div className="mt-20 flex flex-col items-start gap-6 rounded-xl border border-focus-border bg-focus-card p-10 md:flex-row md:items-center md:justify-between">
+        <p className="mt-12 max-w-2xl text-operational">
+          Where it fits, we also look at AI assistance for routine questions and internal knowledge.
+        </p>
+
+        <div className="mt-20 flex flex-col items-start gap-6 rounded-xl border border-operational/20 p-10 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="font-display text-2xl font-semibold text-elevation">
-              Not sure which of this applies to you?
-            </h2>
-            <p className="mt-2 text-elevation-muted">
-              That&rsquo;s what the Ops Audit is for. We&rsquo;ll tell you.
-            </p>
+            <h2 className="font-display text-2xl font-semibold text-elevation">Not sure where to start?</h2>
+            <p className="mt-2 text-operational">That&rsquo;s what the free assessment is for.</p>
           </div>
-          <CTAButton href="/contact">Get Your Free Ops Audit</CTAButton>
+          <CTAButton href="/contact">{siteConfig.ctaPrimary}</CTAButton>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { siteConfig } from "@/lib/site";
 export default function JsonLd() {
   const organization = {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
+    "@type": "Organization",
     "@id": `${siteConfig.url}/#organization`,
     name: siteConfig.name,
     url: siteConfig.url,
@@ -11,17 +11,6 @@ export default function JsonLd() {
     image: `${siteConfig.url}/og-image.jpg`,
     description: siteConfig.description,
     slogan: siteConfig.tagline,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Austin",
-      addressRegion: "TX",
-      addressCountry: "US",
-    },
-    areaServed: {
-      "@type": "Place",
-      name: "Greater Austin / Central Texas",
-    },
-    priceRange: "$$",
   };
 
   const website = {
@@ -30,6 +19,7 @@ export default function JsonLd() {
     "@id": `${siteConfig.url}/#website`,
     url: siteConfig.url,
     name: siteConfig.name,
+    description: siteConfig.description,
     publisher: { "@id": `${siteConfig.url}/#organization` },
   };
 

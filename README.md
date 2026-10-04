@@ -1,6 +1,6 @@
-# DROVYR — Website
+# Drovyr — Website
 
-Production codebase for the DROVYR marketing site: Next.js 16 (App Router), TypeScript, Tailwind CSS. Built for deployment on Vercel.
+Production codebase for the Drovyr marketing site: Next.js 16 (App Router), TypeScript, Tailwind CSS. Built for deployment on Vercel.
 
 ---
 
@@ -31,12 +31,12 @@ npm run lint          # ESLint
 
 ## 2. What was built
 
-- **Pages:** Home, Solutions, How It Works, Industries, About, Contact (Free Ops Audit lead form), Privacy Policy, Terms & Conditions, Cookie Policy, custom 404.
+- **Pages:** Home, Solutions, How it works, Industries, About, Contact (free AI & ops assessment lead form), Privacy policy, Terms and conditions, Cookie policy, custom 404.
 - **Lead form:** client + server validation (shared Zod schema), honeypot spam field, basic in-memory rate limiting, loading/success/error states, keyboard accessible, sends email via Resend.
-- **SEO:** unique metadata + Open Graph/Twitter cards per page, dynamic `sitemap.xml` and `robots.txt`, JSON-LD (ProfessionalService + WebSite), semantic heading hierarchy (one `<h1>` per page).
+- **SEO:** unique metadata + Open Graph/Twitter cards per page, dynamic `sitemap.xml` and `robots.txt` from `NEXT_PUBLIC_SITE_URL` (fallback `https://drovyr.com`), JSON-LD (`Organization` + `WebSite`, no address, phone, or price range), semantic heading hierarchy (one `<h1>` per page). No keywords meta tag.
 - **Security:** CSP + full security header set (see `next.config.js`), no secrets in client code, server-side validation/sanitization on the API route, rate limiting, honeypot.
-- **Cookie consent:** Accept / Reject Non-Essential / Preferences banner, no dark patterns, gates GA4 (Vercel Analytics is cookieless and loads regardless).
-- **Brand assets:** logo, favicon, touch icons, and OG image extracted and processed from the approved lookbook you provided (see `public/`).
+- **Cookie consent:** Accept / Reject non-essential / Preferences banner, no dark patterns, gates GA4 (Vercel Analytics is cookieless and loads regardless).
+- **Brand assets:** logo, favicon, and touch icons in `public/`. The Open Graph image is a flat navy field with the wordmark and the tagline.
 - **Accessibility:** skip-to-content link, visible focus states, labeled form fields with error messages, `prefers-reduced-motion` respected, semantic landmarks.
 
 ---
@@ -47,12 +47,11 @@ Copy `.env.example` to `.env.local` for local dev. In Vercel: **Project → Sett
 
 | Variable | Required | Notes |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | Yes | `https://drovyr.com` in production. Used for canonical URLs, sitemap, OG tags. |
-| `LEAD_NOTIFICATION_EMAIL` | No (defaults to `williamzfore@gmail.com`) | Where form submissions are sent. Code now falls back to `williamzfore@gmail.com` even if this isn't set in Vercel — set it explicitly once you're ready to switch to `office@drovyr.com`, no code change needed. |
-| `RESEND_API_KEY` | Yes, to actually deliver leads | See section 4. Without this, the form correctly shows an error instead of a fake success — it will not silently drop leads. |
-| `RESEND_FROM_EMAIL` | Yes, alongside the key | Must be an address on a domain verified in Resend. |
-| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | No | Leave blank to skip GA4 entirely. Vercel Analytics needs no key. |
-| `TURNSTILE_SECRET_KEY` / `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | No | Placeholders only — not wired up. See section 8 if you want to add this later. |
+| `NEXT_PUBLIC_SITE_URL` | Yes for lead delivery. Public URLs fall back to `https://drovyr.com` if unset. | Canonical URLs, sitemap, robots, and Open Graph. Set `https://drovyr.com` in production. |
+| `RESEND_API_KEY` | Yes, to deliver leads | No fallback. If it is missing, `/api/lead` returns an error and the form shows that error. |
+| `LEAD_NOTIFICATION_EMAIL` | Yes, to deliver leads | Inbox that receives form submissions. No default address is hard-coded. |
+| `RESEND_FROM_EMAIL` | Yes, to deliver leads | Must be an address on a domain verified in Resend. No shared testing sender is hard-coded. |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | No | Leave blank to skip GA4 entirely. Do not invent an ID. Vercel Analytics needs no key. |
 
 ---
 
@@ -61,14 +60,12 @@ Copy `.env.example` to `.env.local` for local dev. In Vercel: **Project → Sett
 The lead form is fully built and tested against a live local server, **except actual email delivery**, which needs your Resend credentials (I don't have them, and won't fabricate a "tested" result).
 
 1. Create a [Resend](https://resend.com) account.
-2. Set `RESEND_API_KEY` in Vercel right away — with just the key, the form will already work using Resend's shared testing sender (`onboarding@resend.dev`), so you can test end-to-end before domain verification is done.
-3. When ready to send from `@drovyr.com`, add and verify `drovyr.com` as a sending domain in Resend. Resend will give you specific DNS records (typically DKIM/TXT, sometimes a Return-Path CNAME) to add in Namecheap.
-   **Add these alongside your existing DNS records — do not delete or replace any current MX, SPF, DKIM, or DMARC records used by your business email.** If you're unsure whether a record conflicts with something already there, paste me the record Resend gives you and what's currently in Namecheap and I'll tell you exactly what to do.
-4. Set `RESEND_FROM_EMAIL` to something like `DROVYR <noreply@drovyr.com>` — **not** a Gmail address.
-5. Set `LEAD_NOTIFICATION_EMAIL` only when you want to change the destination from the built-in default (`williamzfore@gmail.com`) to `office@drovyr.com`.
-6. Redeploy, then submit a real test through the live form.
+2. Add and verify the sending domain in Resend before expecting delivery. Resend will give you specific DNS records (typically DKIM/TXT, sometimes a Return-Path CNAME).
+   **Add these alongside your existing DNS records — do not delete or replace any current MX, SPF, DKIM, or DMARC records used by your business email.**
+3. Set `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `LEAD_NOTIFICATION_EMAIL`, and `NEXT_PUBLIC_SITE_URL` in Vercel. All four are required. The route does not fall back to a personal inbox or a shared testing sender.
+4. Redeploy, then submit a real test through the live form and confirm it arrives in the inbox you configured.
 
-Until step 2 is done, the form will correctly show visitors an error message ("unable to submit requests right now, email office@drovyr.com directly") rather than pretending success. Submitted leads are also logged server-side (visible in Vercel function logs) during this window as a fallback, but that's not a substitute for real email delivery — don't rely on log-watching once the site is public.
+If any of those four variables is missing, the form shows a visible error ("Something went wrong and your request wasn't sent. Please try again shortly.") and does not report success. The server log names which variables are missing. It does not store the submission as a substitute for email delivery.
 
 ---
 
@@ -79,7 +76,7 @@ Currently implemented:
 - **Server-side rate limiting** — 5 submissions per IP per minute.
 
 **Known limitation:** the rate limiter is in-memory (see comments in `src/lib/rateLimit.ts`). Vercel serverless functions can run as multiple instances, so this doesn't share state across instances/regions and resets on cold start. It stops casual repeat-submission abuse but isn't a real distributed limiter. If lead-form spam becomes a problem, the two straightforward upgrades are:
-- **Cloudflare Turnstile or hCaptcha** (a checkbox challenge — placeholders are already in `.env.example`), or
+- **Cloudflare Turnstile or hCaptcha** (a checkbox challenge — not wired up), or
 - **Upstash Redis + `@upstash/ratelimit`** for real distributed rate limiting, or Vercel's own Firewall rate-limiting rules.
 
 Neither is wired up — flagging so you can prioritize if/when it's actually needed rather than guessing at a solution you may not need yet.
@@ -149,10 +146,10 @@ Not implemented (flagged, not silently skipped): a nonce-based CSP (currently us
 - Canonical URL on every indexable page.
 - Open Graph + Twitter Card metadata, using a generated social preview image (`public/og-image.jpg`) built from your approved brand lookbook.
 - `sitemap.xml` and `robots.txt` generated dynamically from `src/app/sitemap.ts` / `robots.ts` (disallows `/api/`).
-- JSON-LD structured data: `ProfessionalService` + `WebSite` (`src/components/JsonLd.tsx`) — uses only real, non-fabricated fields (no invented reviews, ratings, or address beyond "Austin, TX").
+- JSON-LD structured data: `Organization` + `WebSite` (`src/components/JsonLd.tsx`). Name, URL, logo, description, and slogan only. No address, phone, email, price range, or service-area claim in the structured data.
 - Semantic HTML, one `<h1>` per page, logical heading order.
-- Descriptive `alt` text on both logo instances (header, footer); all other imagery is original decorative SVG (`aria-hidden`), so no stock-photo alt-text debt.
-- Target keywords worked naturally into copy per section 18 of your brief — not stuffed.
+- Header wordmark `alt="Drovyr home"`; footer wordmark `alt="Drovyr"`. Decorative SVG is `aria-hidden`.
+- No keywords meta tag.
 
 ---
 
@@ -215,8 +212,8 @@ drovyr/
 
 ## 12. Pre-launch checklist
 
-- [ ] Add `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, verify sending domain in Resend
-- [ ] Confirm `LEAD_NOTIFICATION_EMAIL` is the right inbox (defaults to Gmail if unset; switch to `office@drovyr.com` when ready)
+- [ ] Add `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, and `LEAD_NOTIFICATION_EMAIL`, and verify the sending domain in Resend. There is no hard-coded recipient or sender.
+- [ ] Confirm which inbox should receive leads, and whether `office@drovyr.com` is a real mailbox, before publishing that address as the contact channel.
 - [ ] Set `NEXT_PUBLIC_SITE_URL` to `https://drovyr.com` in Vercel
 - [ ] Connect domain in Vercel, add DNS records in Namecheap, verify SSL
 - [ ] Set canonical domain + redirect (www ↔ apex)
@@ -224,5 +221,5 @@ drovyr/
 - [ ] Share the URL in a chat app to confirm the OG image renders
 - [ ] Run Lighthouse against the live URL
 - [ ] Decide whether to add GA4 or a bot-challenge service (sections 5 & 7)
-- [ ] Legal review of Privacy Policy / Terms / Cookie Policy before public launch
+- [ ] Legal review of the privacy policy, terms and conditions, and cookie policy before public launch
 - [ ] Add a real LinkedIn URL to the footer if/when one exists (deliberately omitted — brief said no fake social links)

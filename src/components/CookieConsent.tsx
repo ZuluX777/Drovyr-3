@@ -62,21 +62,21 @@ export default function CookieConsent() {
       role="dialog"
       aria-label="Cookie preferences"
       aria-modal="false"
-      className="fixed inset-x-0 bottom-0 z-[60] border-t border-focus-border bg-focus-raised/98 backdrop-blur-sm"
+      className="fixed inset-x-0 bottom-0 z-[60] border-t border-operational/20 bg-focus"
     >
       <div className="container-content flex flex-col gap-4 py-5 md:flex-row md:items-center md:justify-between">
-        <div className="max-w-2xl text-sm text-elevation-muted">
+        <div className="max-w-2xl text-sm text-operational">
           <p>
             We use essential cookies to run this site, and optional analytics cookies to understand
             how it&rsquo;s used. Read our{" "}
-            <Link href="/cookies" className="text-clarity underline hover:text-elevation">
-              Cookie Policy
+            <Link href="/cookies" className="text-link">
+              Cookie policy
             </Link>
             .
           </p>
 
           {showPreferences && (
-            <div className="mt-4 rounded-md border border-focus-border bg-focus p-4">
+            <div className="mt-4 rounded-md border border-operational/20 bg-focus p-4">
               <label className="flex items-start gap-3 text-sm text-elevation">
                 <input
                   type="checkbox"
@@ -87,7 +87,7 @@ export default function CookieConsent() {
                 <span>
                   <span className="font-medium">Analytics cookies</span>
                   <br />
-                  <span className="text-elevation-muted">
+                  <span className="text-operational">
                     Helps us understand site usage. Not required for the site to function.
                   </span>
                 </span>
@@ -101,7 +101,7 @@ export default function CookieConsent() {
             <button
               type="button"
               onClick={() => persist(analyticsEnabled ? "accepted_all" : "rejected_non_essential")}
-              className="rounded-md bg-momentum px-5 py-2.5 text-sm font-semibold text-white hover:bg-momentum-dim"
+              className="rounded-md bg-momentum px-5 py-2.5 text-sm font-semibold text-elevation hover:opacity-90"
             >
               Save preferences
             </button>
@@ -110,21 +110,21 @@ export default function CookieConsent() {
               <button
                 type="button"
                 onClick={() => persist("rejected_non_essential")}
-                className="rounded-md border border-focus-border px-5 py-2.5 text-sm font-medium text-elevation-muted hover:text-elevation"
+                className="rounded-md border border-operational/20 px-5 py-2.5 text-sm font-medium text-operational hover:text-elevation"
               >
-                Reject Non-Essential
+                Reject non-essential
               </button>
               <button
                 type="button"
                 onClick={() => setShowPreferences(true)}
-                className="rounded-md border border-focus-border px-5 py-2.5 text-sm font-medium text-elevation-muted hover:text-elevation"
+                className="rounded-md border border-operational/20 px-5 py-2.5 text-sm font-medium text-operational hover:text-elevation"
               >
                 Preferences
               </button>
               <button
                 type="button"
                 onClick={() => persist("accepted_all")}
-                className="rounded-md bg-momentum px-5 py-2.5 text-sm font-semibold text-white hover:bg-momentum-dim"
+                className="rounded-md bg-momentum px-5 py-2.5 text-sm font-semibold text-elevation hover:opacity-90"
               >
                 Accept
               </button>

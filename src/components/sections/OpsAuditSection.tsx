@@ -1,49 +1,44 @@
 import CTAButton from "@/components/CTAButton";
+import { siteConfig } from "@/lib/site";
 
-const receive = [
-  "A clear map of where time, money, or opportunity is slipping through the cracks",
-  "Specific automation and AI opportunities, ranked by likely impact",
-  "A recommended starting point — not a 40-page report you'll never open",
+const topics = [
+  "How work comes in, and who follows up",
+  "How the schedule is kept",
+  "Where handoffs between people or systems slip",
+  "Which tools you already use",
 ];
 
 export default function OpsAuditSection() {
   return (
-    <section id="ops-audit" className="border-b border-focus-border/60 bg-focus-raised">
+    <section id="assessment" className="border-b border-operational/20 bg-focus">
       <div className="container-content py-20 md:py-28">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
           <div>
             <h2 className="font-display text-3xl font-semibold text-elevation md:text-4xl">
-              Get Your Free Ops Audit
+              {siteConfig.assessmentName}
             </h2>
-            <p className="mt-5 text-lg text-elevation-muted">
-              We look at how work actually moves through your business, identify where time or
-              revenue is being lost, and show you where AI and automation can create the highest
-              impact.
+            <p className="mt-5 text-lg text-operational">
+              A conversation about your operation: what&rsquo;s getting in the way, what you&rsquo;ve
+              already tried, and whether we&rsquo;re a good fit.
             </p>
-            <p className="mt-4 text-elevation-muted">
-              It&rsquo;s a single conversation, usually 30–45 minutes, focused on your business —
-              not a sales pitch.
+            <p className="mt-4 text-sm text-operational">
+              Every engagement is scoped separately after the assessment. No outcome is guaranteed.
             </p>
             <div className="mt-8">
-              <CTAButton href="/contact">Get Your Free Ops Audit</CTAButton>
+              <CTAButton href="/contact">{siteConfig.ctaPrimary}</CTAButton>
             </div>
           </div>
 
-          <div className="rounded-xl border border-focus-border bg-focus-card p-8">
-            <h3 className="font-medium text-elevation">What you&rsquo;ll get</h3>
+          <div className="rounded-xl border border-operational/20 p-8">
+            <h3 className="font-medium text-elevation">What we ask about</h3>
             <ul className="mt-5 space-y-4">
-              {receive.map((item) => (
-                <li key={item} className="flex gap-3 text-elevation-muted">
-                  <span aria-hidden="true" className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-clarity" />
+              {topics.map((item) => (
+                <li key={item} className="flex gap-3 text-operational">
+                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-momentum" />
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
-            <p className="mt-6 text-sm text-elevation-faint">
-              We&rsquo;ll ask about lead capture and follow-up, scheduling, admin work, reporting,
-              customer handoffs, billing workflows, and the systems you already use — no guaranteed
-              outcomes promised, just a clear read on where the opportunity actually is.
-            </p>
           </div>
         </div>
       </div>
